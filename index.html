@@ -3,66 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TCG Hub Pro</title>
+    <title>TCG Hub Final</title>
     <style>
-        :root { 
-            --bg: #000000; 
-            --txt: #ffffff; 
-            --prim: #00ff88; 
-            --sec: #1a1a1a; 
-            --high: #ffd700; 
-            --danger: #ff4444;
-        }
+        :root { --bg: #000000; --txt: #ffffff; --prim: #00ff88; --sec: #1a1a1a; --high: #ffd700; --danger: #ff4444; }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 15px; -webkit-font-smoothing: antialiased; }
-        
         .admin-trigger { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; opacity: 0.2; font-size: 1.2rem; cursor: pointer; z-index: 1000; }
-
         .header-area { text-align: center; margin: 20px 0 30px 0; }
         h1 { color: var(--prim); margin: 0; font-size: 1.8rem; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
-
         .tabs { display: flex; gap: 8px; margin-bottom: 25px; }
         .tab-btn { background: var(--sec); color: white; border: 1px solid #333; padding: 14px; flex: 1; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: 0.2s; text-transform: uppercase; }
         .tab-btn.active { background: var(--prim); color: #000; border-color: var(--prim); }
-
         .tab-content { display: none; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--sec); border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
-        th, td { padding: 14px 8px; border-bottom: 1px solid #333; text-align: center; font-size: 0.9rem; }
+        th, td { padding: 14px 8px; border-bottom: 1px solid #333; text-align: center; font-size: 0.85rem; }
         th { background: rgba(255,255,255,0.05); color: var(--prim); font-size: 0.7rem; text-transform: uppercase; }
-
-        /* Style High Seed */
         .high-seed { color: var(--high) !important; font-weight: 900 !important; border-left: 3px solid var(--high); padding-left: 5px; }
-        
         .bracket { display: flex; flex-direction: column; gap: 15px; }
         .match { background: var(--sec); padding: 15px; border: 1px solid #333; border-radius: 12px; line-height: 1.6; }
         .match span { display: block; color: #ccc; }
-
-        .final-winner-card { 
-            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
-            border: 2px solid var(--high); padding: 40px 10px; text-align: center; border-radius: 25px; margin-top: 30px;
-        }
+        .final-winner-card { background: linear-gradient(180deg, #1a1a1a 0%, #000 100%); border: 2px solid var(--high); padding: 40px 10px; text-align: center; border-radius: 25px; margin-top: 30px; }
         .winner-name { font-size: 2.2rem; font-weight: 900; display: block; margin-top: 15px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
         .winner-trophy { font-size: 4rem; display: block; filter: drop-shadow(0 0 15px gold); }
-
         .admin-card { background: var(--sec); border: 1px solid #444; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
-        input, select { background: #000; color: white; border: 1px solid #444; padding: 14px; width: 100%; box-sizing: border-box; margin-bottom: 12px; border-radius: 10px; font-size: 1rem; }
-        .btn-action { background: var(--prim); color: #000; border: none; padding: 18px; font-weight: bold; width: 100%; border-radius: 12px; cursor: pointer; font-size: 1rem; }
+        input, select { background: #000; color: white; border: 1px solid #444; padding: 12px; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 10px; font-size: 0.9rem; }
+        .btn-action { background: var(--prim); color: #000; border: none; padding: 15px; font-weight: bold; width: 100%; border-radius: 10px; cursor: pointer; font-size: 0.9rem; margin-top: 5px; }
         .btn-danger { background: var(--danger); color: white; margin-top: 15px; }
         .share-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--prim); font-family: monospace; font-size: 0.75rem; word-break: break-all; color: var(--prim); margin-top: 10px; }
-
         #sync-status { text-align: center; font-size: 0.7rem; margin-bottom: 10px; color: var(--prim); font-weight: 800; }
     </style>
 </head>
 <body>
 
     <button class="admin-trigger" onclick="adminAccess()">⚙️</button>
-
-    <div class="header-area">
-        <h1 id="main-title-display">TOURNAMENT HUB</h1>
-    </div>
-
+    <div class="header-area"><h1 id="main-title-display">TOURNAMENT HUB</h1></div>
     <div id="sync-status">INITIALISATION...</div>
 
     <div class="tabs">
@@ -80,9 +55,7 @@
         <table><thead><tr><th>#</th><th>Joueur</th><th>Pts</th><th>OMWP%</th></tr></thead><tbody id="r-body"></tbody></table>
     </div>
 
-    <div id="top8" class="tab-content">
-        <div id="bracket-view"></div>
-    </div>
+    <div id="top8" class="tab-content"><div id="bracket-view"></div></div>
 
     <div id="admin" class="tab-content">
         <div class="admin-card">
@@ -90,9 +63,7 @@
             <input type="text" id="admin-tourney-name" placeholder="Nom du Tournoi" oninput="state.name = this.value; render();">
             <input type="text" id="api-bin-id" placeholder="Bin ID" oninput="saveApi()">
             <input type="password" id="api-key" placeholder="Master Key" oninput="saveApi()">
-            <div id="share-area" style="display:none;">
-                <div class="share-box" id="share-link"></div>
-            </div>
+            <div id="share-area" style="display:none;"><div class="share-box" id="share-link"></div></div>
         </div>
 
         <div class="admin-card">
@@ -105,8 +76,20 @@
             <button class="btn-action" onclick="handleImport()">ANALYSER LE FICHIER</button>
         </div>
 
+        <div class="admin-card" style="border-color: var(--prim);">
+            <h3>✍️ Ajout Manuel (Pairings)</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                <input type="text" id="man-table" placeholder="Table (ex: 5)">
+                <input type="text" id="man-round" placeholder="Ronde (ex: 1)">
+                <input type="text" id="man-p1" placeholder="Joueur 1">
+                <input type="text" id="man-p2" placeholder="Joueur 2 / BYE">
+            </div>
+            <input type="text" id="man-score" placeholder="Score (ex: 2/1/0 (3))">
+            <button class="btn-action" onclick="addManualPairing()">AJOUTER LE MATCH</button>
+        </div>
+
         <div class="admin-card">
-            <h3>🏆 Top 8 & Publication</h3>
+            <h3>🏆 Publication & Top 8</h3>
             <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;"></div>
             <div style="margin-top:15px; font-size: 0.9rem;">
                 Gagnants T8: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select></div>
@@ -124,10 +107,7 @@
         let state = JSON.parse(JSON.stringify(initialState));
         
         const urlParams = new URLSearchParams(window.location.search);
-        let api = {
-            id: urlParams.get('id') || localStorage.getItem('tcg_api_id') || "",
-            key: urlParams.get('key') || localStorage.getItem('tcg_api_key') || ""
-        };
+        let api = { id: urlParams.get('id') || localStorage.getItem('tcg_api_id') || "", key: urlParams.get('key') || localStorage.getItem('tcg_api_key') || "" };
 
         function saveApi() {
             api.id = document.getElementById('api-bin-id').value;
@@ -181,43 +161,59 @@
                     state.rounds[r] = parsePairings(rows);
                     state.currentRound = r;
                     type = "Appariements";
-                } else { 
-                    state.ranks = parseStandings(rows);
-                    type = "Classement";
-                }
+                } else { state.ranks = parseStandings(rows); type = "Classement"; }
                 render();
-                alert(`✅ Fichier ${type} correctement envoyé et analysé.`);
+                alert(`✅ Fichier ${type} analysé.`);
             };
             reader.readAsText(file);
+        }
+
+        function addManualPairing() {
+            const r = document.getElementById('man-round').value;
+            const t = document.getElementById('man-table').value;
+            const p1 = document.getElementById('man-p1').value;
+            const p2 = document.getElementById('man-p2').value || "BYE";
+            const s = document.getElementById('man-score').value;
+
+            if(!r || !p1) return alert("Remplissez au moins Ronde et Joueur 1");
+            
+            if(!state.rounds[r]) state.rounds[r] = "";
+            state.rounds[r] += `\n${t},${p1} vs ${p2},${s}`;
+            state.currentRound = r;
+            render();
+            alert("Match ajouté localement !");
         }
 
         function parsePairings(rows) {
             let matches = [];
             let seenTables = new Set();
-            const scoreRegex = /\(\d+\/\d+\/\d+\s*\(\d+\)\)/;
+            const scoreRegex = /\(\d+\/\d+\/\d+\s*\(\d+\)\)/g;
 
             rows.forEach(row => {
                 const c = row.querySelectorAll("td");
                 if (c.length >= 4) {
-                    const tableNum = c[0].innerText.trim();
-                    if(seenTables.has(tableNum)) return; // Empêche les doublons
-
+                    let tableVal = c[0].innerText.trim();
                     const p1Raw = c[1].innerText.trim();
                     const p2Raw = c[3].innerText.trim();
+
+                    if(seenTables.has(tableVal)) return;
 
                     const p1Name = p1Raw.split('(')[0].trim();
                     const p2Name = p2Raw.split('(')[0].trim();
                     
-                    const scoreMatch = p1Raw.match(scoreRegex) || p2Raw.match(scoreRegex);
-                    const scoreStr = scoreMatch ? scoreMatch[0] : "";
+                    if(p2Name.toLowerCase() === "bye") tableVal = "BYE";
+
+                    // Extraction des scores (P1 et P2)
+                    const s1 = p1Raw.match(scoreRegex);
+                    const s2 = p2Raw.match(scoreRegex);
+                    const scoreDisplay = (s1 && s2) ? `${s1[0]} vs ${s2[0]}` : (s1 || s2 || "");
 
                     if(p1Name) {
-                        matches.push({ t: parseInt(tableNum), p1: p1Name, p2: p2Name || "(BYE)", s: scoreStr });
-                        seenTables.add(tableNum);
+                        matches.push({ t: tableVal, p1: p1Name, p2: p2Name || "BYE", s: scoreDisplay });
+                        seenTables.add(tableVal);
                     }
                 }
             });
-            matches.sort((a,b) => a.t - b.t);
             return matches.map(m => `${m.t},${m.p1} vs ${m.p2},${m.s}`).join('\n');
         }
 
@@ -230,11 +226,10 @@
             return csv.trim();
         }
 
-        // --- LOGIQUE SEEDING ---
         function getSeedRank(playerName) {
             if (!playerName || playerName === "TBD") return 99;
             const idx = state.seeds.indexOf(playerName);
-            return idx === -1 ? 99 : idx + 1; // Rang 1 à 8
+            return idx === -1 ? 99 : idx + 1;
         }
 
         const isHigh = (p, other) => {
@@ -252,7 +247,7 @@
             const rds = Object.keys(state.rounds).sort((a,b)=>a-b);
             document.getElementById('user-round-select').innerHTML = rds.map(r => `<option value="${r}" ${r==state.currentRound?'selected':''}>Ronde ${r}</option>`).join('');
             
-            document.getElementById('p-body').innerHTML = (state.rounds[state.currentRound] || "").split('\n').map(l => {
+            document.getElementById('p-body').innerHTML = (state.rounds[state.currentRound] || "").trim().split('\n').map(l => {
                 const c = l.split(','); return c.length > 1 ? `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]||''}</td></tr>` : '';
             }).join('');
 
@@ -288,32 +283,13 @@
                     <div class="match"><span ${isHigh(state.wins.s1,state.wins.s2)}>${state.wins.s1||'TBD'}</span><span ${isHigh(state.wins.s2,state.wins.s1)}>${state.wins.s2||'TBD'}</span></div>
                 </div>`;
 
-            if(state.wins.f1) {
-                brHTML += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span style="color:var(--prim); font-weight:800; letter-spacing:2px;">CHAMPION</span><span class="winner-name">${state.wins.f1}</span></div>`;
-            }
+            if(state.wins.f1) { brHTML += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span style="color:var(--prim); font-weight:800; letter-spacing:2px;">CHAMPION</span><span class="winner-name">${state.wins.f1}</span></div>`; }
             document.getElementById('bracket-view').innerHTML = brHTML + `</div>`;
         }
 
-        function resetTournament() {
-            if(confirm("⚠ ACTION IRRÉVERSIBLE ⚠\n\nEffacer tout le tournoi ?")) {
-                state = JSON.parse(JSON.stringify(initialState));
-                render();
-            }
-        }
-
-        function openTab(e, id) {
-            document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(id).classList.add('active'); 
-            if(e) e.currentTarget.classList.add('active');
-        }
-
-        function adminAccess() { 
-            if(prompt("Code d'accès Admin :") === MASTER_PWD) {
-                openTab(null, 'admin');
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            } 
-        }
-
+        function resetTournament() { if(confirm("⚠ RESET COMPLET ?")) { state = JSON.parse(JSON.stringify(initialState)); render(); } }
+        function openTab(e, id) { document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active'); if(e) e.currentTarget.classList.add('active'); }
+        function adminAccess() { if(prompt("Pass:") === MASTER_PWD) { openTab(null, 'admin'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); } }
         window.onload = () => { fetchData(); setInterval(fetchData, 30000); };
     </script>
 </body>
