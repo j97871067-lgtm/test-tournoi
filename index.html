@@ -3,37 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCG Live Tournament Hub</title>
+    <title>Tournament Hub Sync</title>
     <style>
         :root {
             --bg-color: #121212; --text-color: #ffffff; --primary-color: #00ff88;
             --secondary-color: #1e1e1e; --border-color: #333333; --highlight-color: #ffd700;
         }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 10px; }
-        h1 { text-align: center; color: var(--primary-color); font-size: 1.5em; margin-bottom: 20px; }
         .tabs { display: flex; justify-content: center; gap: 5px; margin-bottom: 15px; }
-        .tab-btn { background: var(--secondary-color); color: white; border: 1px solid var(--border-color); padding: 10px; cursor: pointer; border-radius: 5px; font-size: 0.9em; flex: 1; max-width: 100px; }
-        .tab-btn.active { background: var(--primary-color); color: #000; border-color: var(--primary-color); font-weight: bold; }
+        .tab-btn { background: var(--secondary-color); color: white; border: 1px solid var(--border-color); padding: 10px; cursor: pointer; border-radius: 5px; flex: 1; }
+        .tab-btn.active { background: var(--primary-color); color: #000; font-weight: bold; }
         .tab-content { display: none; max-width: 800px; margin: 0 auto; }
         .tab-content.active { display: block; }
-        table { width: 100%; border-collapse: collapse; background: var(--secondary-color); border-radius: 8px; overflow: hidden; margin-bottom: 20px; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; background: var(--secondary-color); margin-bottom: 20px; }
         th, td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: center; }
-        th { background: rgba(0,255,136,0.1); color: var(--primary-color); }
         .admin-card { background: #1e1e1e; border: 1px solid #444; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        textarea, input, select { background: #2a2a2a; color: white; border: 1px solid #444; padding: 8px; width: 100%; box-sizing: border-box; border-radius: 4px; margin-bottom: 8px; }
-        .btn-action { background: var(--primary-color); color: #000; border: none; padding: 15px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 5px; margin-top: 10px; }
-        .bracket { display: flex; justify-content: space-between; gap: 10px; overflow-x: auto; padding-bottom: 20px; }
-        .bracket-col { min-width: 140px; }
-        .match { background: #1e1e1e; padding: 8px; border-radius: 6px; margin: 10px 0; border: 1px solid #333; font-size: 0.85em; position: relative; }
+        textarea, input, select { background: #2a2a2a; color: white; border: 1px solid #444; padding: 8px; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
+        .btn-action { background: var(--primary-color); color: #000; border: none; padding: 15px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 5px; }
         .high-seed { color: var(--highlight-color); font-weight: bold; border-left: 3px solid var(--highlight-color); padding-left: 5px; }
-        .winner-display { text-align: center; margin-top: 10px; font-weight: bold; color: var(--primary-color); font-size: 1.1em; border: 1px dashed var(--primary-color); padding: 5px; }
-        .selector-round { margin: 10px auto; display: block; width: 100%; max-width: 250px; padding: 10px; background: var(--primary-color); color: black; font-weight: bold; border-radius: 5px; }
-        #sync-status { text-align: center; font-size: 0.7em; opacity: 0.4; margin-top: 10px; }
+        #sync-status { text-align: center; font-size: 0.8em; padding: 10px; background: rgba(255,255,255,0.05); margin-top: 10px; border-radius: 5px; }
+        .bracket { display: flex; justify-content: space-between; gap: 10px; overflow-x: auto; }
+        .match { background: #1e1e1e; padding: 8px; border: 1px solid #333; margin: 5px 0; min-width: 130px; }
     </style>
 </head>
 <body>
 
-    <h1 id="main-title">TOURNAMENT HUB</h1>
+    <h1 style="text-align:center; color:var(--primary-color);">TOURNAMENT LIVE</h1>
+
+    <div id="sync-status">Initialisation...</div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab(event, 'pairings')">Pairings</button>
@@ -43,66 +40,106 @@
     </div>
 
     <div id="pairings" class="tab-content active">
-        <select id="user-round-select" class="selector-round" onchange="state.currentRound = this.value; render();"></select>
-        <table>
-            <thead><tr><th>Table</th><th>Match</th><th>Score</th></tr></thead>
-            <tbody id="p-body"></tbody>
-        </table>
+        <select id="user-round-select" style="background:var(--primary-color); color:black; font-weight:bold;" onchange="state.currentRound = this.value; render();"></select>
+        <table><thead><tr><th>Table</th><th>Match</th><th>Score</th></tr></thead><tbody id="p-body"></tbody></table>
     </div>
 
     <div id="classement" class="tab-content">
-        <table>
-            <thead><tr><th>#</th><th>Joueur</th><th>Pts</th><th>OMWP%</th></tr></thead>
-            <tbody id="r-body"></tbody>
-        </table>
+        <table><thead><tr><th>#</th><th>Joueur</th><th>Pts</th><th>OMWP%</th></tr></thead><tbody id="r-body"></tbody></table>
     </div>
 
-    <div id="top8" class="tab-content">
-        <div class="bracket" id="bracket-view"></div>
-    </div>
+    <div id="top8" class="tab-content"><div class="bracket" id="bracket-view"></div></div>
 
     <div id="admin" class="tab-content">
         <div class="admin-card">
-            <h3>Configuration API</h3>
-            <input type="text" id="api-bin-id" placeholder="Bin ID" onchange="saveApi()">
-            <input type="password" id="api-key" placeholder="Master Key" onchange="saveApi()">
+            <h3>🔑 Configuration Cloud</h3>
+            <input type="text" id="api-bin-id" placeholder="Bin ID" oninput="saveApi()">
+            <input type="password" id="api-key" placeholder="Master Key" oninput="saveApi()">
+            <p style="font-size:0.7em; color:gray;">Lien à donner aux joueurs (auto-connect) :<br>
+            <span id="share-link" style="color:var(--primary-color); word-break: break-all;"></span></p>
         </div>
-
-        <div class="admin-card" style="border: 2px solid var(--primary-color);">
-            <h3>Import Fichier</h3>
-            <input type="file" id="file-selector" accept=".html,.htm">
-            <select id="admin-round-choice">
-                <option value="1">Ronde 1</option><option value="2">Ronde 2</option>
-                <option value="3">Ronde 3</option><option value="4">Ronde 4</option>
-                <option value="5">Ronde 5</option><option value="6">Ronde 6</option>
-                <option value="7">Ronde 7</option>
-            </select>
-            <button type="button" class="btn-action" onclick="handleSmartImport()">⚡ CHARGER LE FICHIER</button>
-        </div>
-
         <div class="admin-card">
-            <h3>Arbre Top 8</h3>
-            <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"></div>
-            <h4 style="margin:10px 0 5px 0">Résultats Matches</h4>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div>T8 Winners:<select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select></div>
-                <div>T4 Winners:<select id="w-s1"></select><select id="w-s2"></select><br>🏆:<select id="w-f1"></select></div>
-            </div>
-            <button class="btn-action" style="background:#ff9500" onclick="pushData()">🚀 PUBLIER SUR LE CLOUD</button>
+            <h3>📥 Import Fichier</h3>
+            <input type="file" id="file-selector">
+            <select id="admin-round-choice">
+                <option value="1">Ronde 1</option><option value="2">Ronde 2</option><option value="3">Ronde 3</option>
+                <option value="4">Ronde 4</option><option value="5">Ronde 5</option><option value="6">Ronde 6</option><option value="7">Ronde 7</option>
+            </select>
+            <button class="btn-action" onclick="handleSmartImport()">ANALYSER LE FICHIER</button>
         </div>
-        <button onclick="resetTournament()" style="color:red; background:none; border:none; width:100%; cursor:pointer;">Réinitialiser tout</button>
+        <div class="admin-card">
+            <h3>🏆 Top 8</h3>
+            <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"></div>
+            <div style="margin-top:10px;">
+                T8 Winners: <select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select><br>
+                T4 Winners: <select id="w-s1"></select><select id="w-s2"></select><br>
+                Champion: <select id="w-f1"></select>
+            </div>
+            <button class="btn-action" style="margin-top:20px; background:#ff9500;" onclick="pushData()">🚀 PUBLIER LES RÉSULTATS</button>
+        </div>
     </div>
-
-    <div id="sync-status">Synchro...</div>
 
     <script>
         const MASTER_PWD = "Vierge";
-        let state = { name: "TOURNOI", seeds: Array(8).fill(""), rounds: {}, ranks: "", wins: { q1:"", q2:"", q3:"", q4:"", s1:"", s2:"", f1:"" }, currentRound: "1" };
-        let api = JSON.parse(localStorage.getItem('tcg_api')) || { id: "", key: "" };
+        let state = { seeds: Array(8).fill(""), rounds: {}, ranks: "", wins: {}, currentRound: "1" };
+        
+        // 1. RECUPERATION DES CLES (URL ou LocalStorage)
+        const urlParams = new URLSearchParams(window.location.search);
+        let api = {
+            id: urlParams.get('id') || localStorage.getItem('tcg_api_id') || "",
+            key: urlParams.get('key') || localStorage.getItem('tcg_api_key') || ""
+        };
 
+        function saveApi() {
+            api.id = document.getElementById('api-bin-id').value;
+            api.key = document.getElementById('api-key').value;
+            localStorage.setItem('tcg_api_id', api.id);
+            localStorage.setItem('tcg_api_key', api.key);
+            updateShareLink();
+        }
+
+        function updateShareLink() {
+            const base = window.location.href.split('?')[0];
+            const link = `${base}?id=${api.id}&key=${api.key}`;
+            document.getElementById('share-link').innerText = link;
+        }
+
+        // 2. SYNCHRO (CORRIGÉE)
+        async function fetchData() {
+            if(!api.id || !api.key) {
+                document.getElementById('sync-status').innerText = "❌ En attente de configuration Admin...";
+                return;
+            }
+            try {
+                const r = await fetch(`https://api.jsonbin.io/v3/b/${api.id}/latest?nocache=${Date.now()}`, {
+                    headers: { 'X-Master-Key': api.key, 'X-Bin-Meta': 'false' }
+                });
+                if(r.ok) {
+                    state = await r.json();
+                    render();
+                    document.getElementById('sync-status').innerText = "✅ Synchronisé - " + new Date().toLocaleTimeString();
+                    document.getElementById('sync-status').style.color = "var(--primary-color)";
+                }
+            } catch(e) { document.getElementById('sync-status').innerText = "📡 Recherche réseau..."; }
+        }
+
+        async function pushData() {
+            if(!api.id || !api.key) return alert("Configure les clés API !");
+            ['q1','q2','q3','q4','s1','s2','f1'].forEach(k => state.wins[k] = document.getElementById('w-'+k).value);
+            for(let i=0; i<8; i++) state.seeds[i] = document.getElementById('seed-'+i).value;
+            try {
+                const r = await fetch(`https://api.jsonbin.io/v3/b/${api.id}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': api.key },
+                    body: JSON.stringify(state)
+                });
+                if(r.ok) { alert("Données envoyées !"); fetchData(); }
+            } catch(e) { alert("Erreur d'envoi"); }
+        }
+
+        // 3. LOGIQUE IMPORT & RENDER
         function handleSmartImport() {
             const fileInput = document.getElementById('file-selector');
-            if (!fileInput.files.length) return alert("Fichier manquant");
+            if (!fileInput.files.length) return alert("Fichier ?");
             const reader = new FileReader();
             reader.onload = function(e) {
                 const doc = new DOMParser().parseFromString(e.target.result, "text/html");
@@ -112,10 +149,8 @@
                     const r = document.getElementById('admin-round-choice').value;
                     state.rounds[r] = parsePairings(rows);
                     state.currentRound = r;
-                    alert("Ronde chargée");
                 } else if (title.includes("classement")) {
                     state.ranks = parseStandings(rows);
-                    alert("Classement chargé");
                 }
                 render();
             };
@@ -126,14 +161,13 @@
             let csv = ""; let seen = new Set();
             rows.forEach((row, i) => {
                 if (i === 0) return;
-                const cols = row.querySelectorAll("td");
-                if (cols.length >= 4) {
-                    const t = cols[0].innerText.trim();
-                    const p1 = cols[1].innerText.split('(')[0].trim();
-                    const p2 = cols[3].innerText.split('(')[0].trim();
+                const c = row.querySelectorAll("td");
+                if (c.length >= 4) {
+                    const p1 = c[1].innerText.split('(')[0].trim();
+                    const p2 = c[3].innerText.split('(')[0].trim();
                     const key = [p1, p2].sort().join('-');
-                    if (p2 && !seen.has(key)) { csv += `${t},${p1} vs ${p2},\n`; seen.add(key); }
-                    else if (!p2 && p1 && !seen.has(p1)) { csv += `${t},${p1} (BYE),\n`; seen.add(p1); }
+                    if (p2 && !seen.has(key)) { csv += `${c[0].innerText.trim()},${p1} vs ${p2},\n`; seen.add(key); }
+                    else if (!p2 && p1 && !seen.has(p1)) { csv += `${c[0].innerText.trim()},${p1} (BYE),\n`; seen.add(p1); }
                 }
             });
             return csv.trim();
@@ -143,56 +177,27 @@
             let csv = "";
             rows.forEach((row, i) => {
                 if (i === 0) return;
-                const cols = row.querySelectorAll("td");
-                if (cols.length >= 7) csv += `${cols[0].innerText.trim()},${cols[1].innerText.trim()},${cols[5].innerText.trim()},${cols[6].innerText.trim()}\n`;
+                const c = row.querySelectorAll("td");
+                if (c.length >= 7) csv += `${c[0].innerText.trim()},${c[1].innerText.trim()},${c[5].innerText.trim()},${c[6].innerText.trim()}\n`;
             });
             return csv.trim();
-        }
-
-        function saveApi() {
-            api.id = document.getElementById('api-bin-id').value;
-            api.key = document.getElementById('api-key').value;
-            localStorage.setItem('tcg_api', JSON.stringify(api));
-        }
-
-        async function pushData() {
-            if(!api.id || !api.key) return alert("Configure l'API d'abord");
-            ['q1','q2','q3','q4','s1','s2','f1'].forEach(k => state.wins[k] = document.getElementById('w-'+k).value);
-            for(let i=0; i<8; i++) state.seeds[i] = document.getElementById('seed-'+i).value;
-            try {
-                await fetch(`https://api.jsonbin.io/v3/b/${api.id}`, {
-                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': api.key },
-                    body: JSON.stringify(state)
-                });
-                alert("Publié !");
-            } catch(e) { alert("Erreur cloud"); }
-        }
-
-        async function fetchData() {
-            if(!api.id || !api.key) return;
-            try {
-                const r = await fetch(`https://api.jsonbin.io/v3/b/${api.id}/latest`, { headers: { 'X-Master-Key': api.key } });
-                if(r.ok) { state = (await r.json()).record; render(); document.getElementById('sync-status').innerText = "MàJ: " + new Date().toLocaleTimeString(); }
-            } catch(e) {}
         }
 
         function render() {
             document.getElementById('api-bin-id').value = api.id;
             document.getElementById('api-key').value = api.key;
+            updateShareLink();
 
             const uSel = document.getElementById('user-round-select');
             uSel.innerHTML = Object.keys(state.rounds).sort((a,b)=>a-b).map(r => `<option value="${r}" ${r==state.currentRound?'selected':''}>Ronde ${r}</option>`).join('');
             
             document.getElementById('p-body').innerHTML = (state.rounds[state.currentRound] || "").split('\n').map(l => {
-                const c = l.split(',');
-                return c.length > 1 ? `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]||''}</td></tr>` : '';
+                const c = l.split(','); return c.length > 1 ? `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]||''}</td></tr>` : '';
             }).join('');
 
             const players = [];
             document.getElementById('r-body').innerHTML = state.ranks.split('\n').map(l => {
-                const c = l.split(',');
-                if(c.length > 1) { players.push(c[1].trim()); return `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`; }
-                return '';
+                const c = l.split(','); if(c.length > 1) { players.push(c[1].trim()); return `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`; } return '';
             }).join('');
 
             document.getElementById('seeds-inputs').innerHTML = state.seeds.map((s, i) => {
@@ -208,36 +213,18 @@
             up('w-f1',[state.wins.s1,state.wins.s2],state.wins.f1);
 
             const isHigh = (p, pair) => (p && p === pair[0]) ? 'class="high-seed"' : '';
-
             document.getElementById('bracket-view').innerHTML = `
-                <div class="bracket-col"><h4>TOP 8</h4>
-                    <div class="match"><span class="high-seed">#1 ${s[0]||'?'}</span><br>#8 ${s[7]||'?'}</div>
-                    <div class="match"><span class="high-seed">#2 ${s[1]||'?'}</span><br>#7 ${s[6]||'?'}</div>
-                    <div class="match"><span class="high-seed">#3 ${s[2]||'?'}</span><br>#6 ${s[5]||'?'}</div>
-                    <div class="match"><span class="high-seed">#4 ${s[3]||'?'}</span><br>#5 ${s[4]||'?'}</div>
-                </div>
-                <div class="bracket-col"><h4>TOP 4</h4>
-                    <div class="match"><span ${isHigh(state.wins.q1,[state.wins.q1,state.wins.q4])}>${state.wins.q1||'TBD'}</span><br>${state.wins.q4||'TBD'}</div>
-                    <div class="match"><span ${isHigh(state.wins.q2,[state.wins.q2,state.wins.q3])}>${state.wins.q2||'TBD'}</span><br>${state.wins.q3||'TBD'}</div>
-                </div>
-                <div class="bracket-col"><h4>FINALE</h4>
-                    <div class="match"><span ${isHigh(state.wins.s1,[state.wins.s1,state.wins.s2])}>${state.wins.s1||'TBD'}</span><br>${state.wins.s2||'TBD'}</div>
-                    <div class="winner-display">${state.wins.f1?"🏆 "+state.wins.f1:""}</div>
-                </div>
+                <div><h4>T8</h4><div class="match"><span class="high-seed">${s[0]||'#1'}</span><br>${s[7]||'#8'}</div><div class="match"><span class="high-seed">${s[1]||'#2'}</span><br>${s[6]||'#7'}</div><div class="match"><span class="high-seed">${s[2]||'#3'}</span><br>${s[5]||'#6'}</div><div class="match"><span class="high-seed">${s[3]||'#4'}</span><br>${s[4]||'#5'}</div></div>
+                <div><h4>T4</h4><div class="match"><span ${isHigh(state.wins.q1,[state.wins.q1,state.wins.q4])}>${state.wins.q1||'TBD'}</span><br>${state.wins.q4||'TBD'}</div><div class="match"><span ${isHigh(state.wins.q2,[state.wins.q2,state.wins.q3])}>${state.wins.q2||'TBD'}</span><br>${state.wins.q3||'TBD'}</div></div>
+                <div><h4>FIN</h4><div class="match"><span ${isHigh(state.wins.s1,[state.wins.s1,state.wins.s2])}>${state.wins.s1||'TBD'}</span><br>${state.wins.s2||'TBD'}</div><div style="color:var(--primary-color); font-weight:bold; text-align:center;">🏆 ${state.wins.f1||''}</div></div>
             `;
         }
 
         function openTab(e, id) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(e) e.currentTarget.classList.add('active');
-            render();
+            document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
         }
-
         function adminAccess(e) { if(prompt("Pass:") === MASTER_PWD) openTab(e, 'admin'); }
-        function resetTournament() { if(confirm("Vider tout ?")) { state = { name: "NEW", seeds: Array(8).fill(""), rounds: {}, ranks: "", wins: { q1:"", q2:"", q3:"", q4:"", s1:"", s2:"", f1:"" }, currentRound: "1" }; render(); } }
-
         window.onload = () => { fetchData(); setInterval(fetchData, 30000); };
     </script>
 </body>
