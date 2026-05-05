@@ -3,42 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TCG Hub Final</title>
+    <title>TCG Hub Pro</title>
     <style>
         :root { --bg: #000000; --txt: #ffffff; --prim: #00ff88; --sec: #1a1a1a; --high: #ffd700; --danger: #ff4444; }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 15px; -webkit-font-smoothing: antialiased; }
-        .admin-trigger { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; opacity: 0.2; font-size: 1.2rem; cursor: pointer; z-index: 1000; }
+        
+        /* Admin Button */
+        .admin-trigger { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; opacity: 0.15; font-size: 1.2rem; cursor: pointer; z-index: 1000; }
+
         .header-area { text-align: center; margin: 20px 0 30px 0; }
         h1 { color: var(--prim); margin: 0; font-size: 1.8rem; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
+
         .tabs { display: flex; gap: 8px; margin-bottom: 25px; }
         .tab-btn { background: var(--sec); color: white; border: 1px solid #333; padding: 14px; flex: 1; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: 0.2s; text-transform: uppercase; }
         .tab-btn.active { background: var(--prim); color: #000; border-color: var(--prim); }
+
         .tab-content { display: none; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--sec); border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         th, td { padding: 14px 8px; border-bottom: 1px solid #333; text-align: center; font-size: 0.85rem; }
         th { background: rgba(255,255,255,0.05); color: var(--prim); font-size: 0.7rem; text-transform: uppercase; }
+
         .high-seed { color: var(--high) !important; font-weight: 900 !important; border-left: 3px solid var(--high); padding-left: 5px; }
+        
         .bracket { display: flex; flex-direction: column; gap: 15px; }
         .match { background: var(--sec); padding: 15px; border: 1px solid #333; border-radius: 12px; line-height: 1.6; }
         .match span { display: block; color: #ccc; }
-        .final-winner-card { background: linear-gradient(180deg, #1a1a1a 0%, #000 100%); border: 2px solid var(--high); padding: 40px 10px; text-align: center; border-radius: 25px; margin-top: 30px; }
+
+        .final-winner-card { 
+            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+            border: 2px solid var(--high); padding: 40px 10px; text-align: center; border-radius: 25px; margin-top: 30px;
+        }
         .winner-name { font-size: 2.2rem; font-weight: 900; display: block; margin-top: 15px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
         .winner-trophy { font-size: 4rem; display: block; filter: drop-shadow(0 0 15px gold); }
+
         .admin-card { background: var(--sec); border: 1px solid #444; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
         input, select { background: #000; color: white; border: 1px solid #444; padding: 12px; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 10px; font-size: 0.9rem; }
         .btn-action { background: var(--prim); color: #000; border: none; padding: 15px; font-weight: bold; width: 100%; border-radius: 10px; cursor: pointer; font-size: 0.9rem; margin-top: 5px; }
         .btn-danger { background: var(--danger); color: white; margin-top: 15px; }
         .share-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--prim); font-family: monospace; font-size: 0.75rem; word-break: break-all; color: var(--prim); margin-top: 10px; }
-        #sync-status { text-align: center; font-size: 0.7rem; margin-bottom: 10px; color: var(--prim); font-weight: 800; }
     </style>
 </head>
 <body>
 
     <button class="admin-trigger" onclick="adminAccess()">⚙️</button>
-    <div class="header-area"><h1 id="main-title-display">TOURNAMENT HUB</h1></div>
-    <div id="sync-status">INITIALISATION...</div>
+
+    <div class="header-area">
+        <h1 id="main-title-display">TOURNAMENT HUB</h1>
+    </div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab(event, 'pairings')">Pairings</button>
@@ -59,7 +73,7 @@
 
     <div id="admin" class="tab-content">
         <div class="admin-card">
-            <h3>⚙️ Configuration</h3>
+            <h3>⚙️ Config & Lien Cloud</h3>
             <input type="text" id="admin-tourney-name" placeholder="Nom du Tournoi" oninput="state.name = this.value; render();">
             <input type="text" id="api-bin-id" placeholder="Bin ID" oninput="saveApi()">
             <input type="password" id="api-key" placeholder="Master Key" oninput="saveApi()">
@@ -67,31 +81,30 @@
         </div>
 
         <div class="admin-card">
-            <h3>📥 Import Fichiers</h3>
+            <h3>📥 Import Fichier</h3>
             <input type="file" id="file-selector">
             <select id="admin-round-choice">
-                <option value="1">Ronde 1</option><option value="2">Ronde 2</option><option value="3">Ronde 3</option>
-                <option value="4">Ronde 4</option><option value="5">Ronde 5</option><option value="6">Ronde 6</option><option value="7">Ronde 7</option>
+                <option value="1">Ronde 1</option><option value="2">Ronde 2</option><option value="3">Ronde 3</option><option value="4">Ronde 4</option>
             </select>
             <button class="btn-action" onclick="handleImport()">ANALYSER LE FICHIER</button>
         </div>
 
         <div class="admin-card" style="border-color: var(--prim);">
-            <h3>✍️ Ajout Manuel (Pairings)</h3>
+            <h3>✍️ Ajout Manuel</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <input type="text" id="man-table" placeholder="Table (ex: 5)">
-                <input type="text" id="man-round" placeholder="Ronde (ex: 1)">
+                <input type="text" id="man-table" placeholder="N° Table">
+                <input type="text" id="man-round" placeholder="N° Ronde">
                 <input type="text" id="man-p1" placeholder="Joueur 1">
                 <input type="text" id="man-p2" placeholder="Joueur 2 / BYE">
             </div>
-            <input type="text" id="man-score" placeholder="Score (ex: 2/1/0 (3))">
-            <button class="btn-action" onclick="addManualPairing()">AJOUTER LE MATCH</button>
+            <input type="text" id="man-score" placeholder="Score (ex: 2/0/0 (3) vs 0/2/0 (0))">
+            <button class="btn-action" onclick="addManualPairing()">AJOUTER CE MATCH</button>
         </div>
 
         <div class="admin-card">
             <h3>🏆 Publication & Top 8</h3>
             <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;"></div>
-            <div style="margin-top:15px; font-size: 0.9rem;">
+            <div style="margin-top:15px;">
                 Gagnants T8: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select></div>
                 Gagnants T4: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-s1"></select><select id="w-s2"></select></div>
                 🏆 Champion: <select id="w-f1" style="border: 1px solid var(--high);"></select>
@@ -131,7 +144,7 @@
                 const r = await fetch(`https://api.jsonbin.io/v3/b/${api.id}/latest?nocache=${Date.now()}`, {
                     headers: { 'X-Master-Key': api.key, 'X-Bin-Meta': 'false' }
                 });
-                if(r.ok) { state = await r.json(); render(); document.getElementById('sync-status').innerText = "• LIVE SYNC ACTIVE •"; }
+                if(r.ok) { state = await r.json(); render(); }
             } catch(e) {}
         }
 
@@ -174,14 +187,19 @@
             const p1 = document.getElementById('man-p1').value;
             const p2 = document.getElementById('man-p2').value || "BYE";
             const s = document.getElementById('man-score').value;
-
             if(!r || !p1) return alert("Remplissez au moins Ronde et Joueur 1");
             
-            if(!state.rounds[r]) state.rounds[r] = "";
-            state.rounds[r] += `\n${t},${p1} vs ${p2},${s}`;
-            state.currentRound = r;
+            let matches = [];
+            if(state.rounds[r]) {
+                state.rounds[r].split('\n').forEach(line => {
+                    const parts = line.split(',');
+                    if(parts.length > 1 && parts[0] !== t) matches.push({t: parts[0], p1: parts[1].split(' vs ')[0], p2: parts[1].split(' vs ')[1], s: parts[2]});
+                });
+            }
+            matches.push({t, p1, p2, s});
+            state.rounds[r] = sortAndFormatMatches(matches);
             render();
-            alert("Match ajouté localement !");
+            alert("Match ajouté.");
         }
 
         function parsePairings(rows) {
@@ -192,29 +210,35 @@
             rows.forEach(row => {
                 const c = row.querySelectorAll("td");
                 if (c.length >= 4) {
-                    let tableVal = c[0].innerText.trim();
-                    const p1Raw = c[1].innerText.trim();
-                    const p2Raw = c[3].innerText.trim();
+                    let tVal = c[0].innerText.trim();
+                    const p1R = c[1].innerText.trim();
+                    const p2R = c[3].innerText.trim();
+                    const p1N = p1R.split('(')[0].trim();
+                    const p2N = p2R.split('(')[0].trim();
 
-                    if(seenTables.has(tableVal)) return;
+                    if(seenTables.has(tVal)) return;
+                    if(p2N.toLowerCase() === "bye") tVal = "BYE";
 
-                    const p1Name = p1Raw.split('(')[0].trim();
-                    const p2Name = p2Raw.split('(')[0].trim();
-                    
-                    if(p2Name.toLowerCase() === "bye") tableVal = "BYE";
+                    const s1 = p1R.match(scoreRegex);
+                    const s2 = p2R.match(scoreRegex);
+                    const sc = (s1 && s2) ? `${s1[0]} vs ${s2[0]}` : (s1 || s2 || "");
 
-                    // Extraction des scores (P1 et P2)
-                    const s1 = p1Raw.match(scoreRegex);
-                    const s2 = p2Raw.match(scoreRegex);
-                    const scoreDisplay = (s1 && s2) ? `${s1[0]} vs ${s2[0]}` : (s1 || s2 || "");
-
-                    if(p1Name) {
-                        matches.push({ t: tableVal, p1: p1Name, p2: p2Name || "BYE", s: scoreDisplay });
-                        seenTables.add(tableVal);
+                    if(p1N) {
+                        matches.push({ t: tVal, p1: p1N, p2: p2N || "BYE", s: sc });
+                        seenTables.add(tVal);
                     }
                 }
             });
-            return matches.map(m => `${m.t},${m.p1} vs ${m.p2},${m.s}`).join('\n');
+            return sortAndFormatMatches(matches);
+        }
+
+        function sortAndFormatMatches(arr) {
+            arr.sort((a, b) => {
+                if (a.t === "BYE") return 1;
+                if (b.t === "BYE") return -1;
+                return parseInt(a.t) - parseInt(b.t);
+            });
+            return arr.map(m => `${m.t},${m.p1} vs ${m.p2},${m.s}`).join('\n');
         }
 
         function parseStandings(rows) {
@@ -226,15 +250,14 @@
             return csv.trim();
         }
 
-        function getSeedRank(playerName) {
-            if (!playerName || playerName === "TBD") return 99;
-            const idx = state.seeds.indexOf(playerName);
-            return idx === -1 ? 99 : idx + 1;
+        function getSeedRank(n) {
+            const i = state.seeds.indexOf(n);
+            return i === -1 ? 99 : i + 1;
         }
 
-        const isHigh = (p, other) => {
-            if (!p || !other || p === 'TBD' || other === 'TBD') return '';
-            return getSeedRank(p) < getSeedRank(other) ? 'class="high-seed"' : '';
+        const isHigh = (p, o) => {
+            if (!p || !o || p==='TBD' || o==='TBD') return '';
+            return getSeedRank(p) < getSeedRank(o) ? 'class="high-seed"' : '';
         };
 
         function render() {
@@ -251,13 +274,13 @@
                 const c = l.split(','); return c.length > 1 ? `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]||''}</td></tr>` : '';
             }).join('');
 
-            const playersList = [];
+            const pList = [];
             document.getElementById('r-body').innerHTML = state.ranks.split('\n').map(l => {
-                const c = l.split(','); if(c.length > 1) { playersList.push(c[1].trim()); return `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`; } return '';
+                const c = l.split(','); if(c.length > 1) { pList.push(c[1].trim()); return `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`; } return '';
             }).join('');
 
             document.getElementById('seeds-inputs').innerHTML = state.seeds.map((s, i) => {
-                let opts = playersList.map(p => `<option value="${p}" ${p===s?'selected':''}>${p}</option>`).join('');
+                let opts = pList.map(p => `<option value="${p}" ${p===s?'selected':''}>${p}</option>`).join('');
                 return `<div>#${i+1}<select id="seed-${i}" onchange="state.seeds[${i}]=this.value"><option value="">-</option>${opts}</select></div>`;
             }).join('');
 
@@ -268,29 +291,24 @@
             up('w-s1',[state.wins.q1,state.wins.q4],state.wins.s1); up('w-s2',[state.wins.q2,state.wins.q3],state.wins.s2);
             up('w-f1',[state.wins.s1,state.wins.s2],state.wins.f1);
 
-            let brHTML = `<div class="bracket">
-                <div class="bracket-round"><h4>QUARTS DE FINALE</h4>
-                    <div class="match"><span ${isHigh(s[0],s[7])}>#1 ${s[0]||'?'}</span><span ${isHigh(s[7],s[0])}>#8 ${s[7]||'?'}</span></div>
-                    <div class="match"><span ${isHigh(s[1],s[6])}>#2 ${s[1]||'?'}</span><span ${isHigh(s[6],s[1])}>#7 ${s[6]||'?'}</span></div>
-                    <div class="match"><span ${isHigh(s[2],s[5])}>#3 ${s[2]||'?'}</span><span ${isHigh(s[5],s[2])}>#6 ${s[5]||'?'}</span></div>
-                    <div class="match"><span ${isHigh(s[3],s[4])}>#4 ${s[3]||'?'}</span><span ${isHigh(s[4],s[3])}>#5 ${s[4]||'?'}</span></div>
-                </div>
-                <div class="bracket-round"><h4>DEMI-FINALES</h4>
-                    <div class="match"><span ${isHigh(state.wins.q1,state.wins.q4)}>${state.wins.q1||'TBD'}</span><span ${isHigh(state.wins.q4,state.wins.q1)}>${state.wins.q4||'TBD'}</span></div>
-                    <div class="match"><span ${isHigh(state.wins.q2,state.wins.q3)}>${state.wins.q2||'TBD'}</span><span ${isHigh(state.wins.q3,state.wins.q2)}>${state.wins.q3||'TBD'}</span></div>
-                </div>
-                <div class="bracket-round"><h4>GRANDE FINALE</h4>
-                    <div class="match"><span ${isHigh(state.wins.s1,state.wins.s2)}>${state.wins.s1||'TBD'}</span><span ${isHigh(state.wins.s2,state.wins.s1)}>${state.wins.s2||'TBD'}</span></div>
-                </div>`;
-
-            if(state.wins.f1) { brHTML += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span style="color:var(--prim); font-weight:800; letter-spacing:2px;">CHAMPION</span><span class="winner-name">${state.wins.f1}</span></div>`; }
-            document.getElementById('bracket-view').innerHTML = brHTML + `</div>`;
+            let br = `<div class="bracket"><div class="bracket-round"><h4>QUARTS</h4>
+                <div class="match"><span ${isHigh(s[0],s[7])}>#1 ${s[0]||'?'}</span><span ${isHigh(s[7],s[0])}>#8 ${s[7]||'?'}</span></div>
+                <div class="match"><span ${isHigh(s[1],s[6])}>#2 ${s[1]||'?'}</span><span ${isHigh(s[6],s[1])}>#7 ${s[6]||'?'}</span></div>
+                <div class="match"><span ${isHigh(s[2],s[5])}>#3 ${s[2]||'?'}</span><span ${isHigh(s[5],s[2])}>#6 ${s[5]||'?'}</span></div>
+                <div class="match"><span ${isHigh(s[3],s[4])}>#4 ${s[3]||'?'}</span><span ${isHigh(s[4],s[3])}>#5 ${s[4]||'?'}</span></div></div>
+                <div class="bracket-round"><h4>DEMIS</h4>
+                <div class="match"><span ${isHigh(state.wins.q1,state.wins.q4)}>${state.wins.q1||'TBD'}</span><span ${isHigh(state.wins.q4,state.wins.q1)}>${state.wins.q4||'TBD'}</span></div>
+                <div class="match"><span ${isHigh(state.wins.q2,state.wins.q3)}>${state.wins.q2||'TBD'}</span><span ${isHigh(state.wins.q3,state.wins.q2)}>${state.wins.q3||'TBD'}</span></div></div>
+                <div class="bracket-round"><h4>FINALE</h4>
+                <div class="match"><span ${isHigh(state.wins.s1,state.wins.s2)}>${state.wins.s1||'TBD'}</span><span ${isHigh(state.wins.s2,state.wins.s1)}>${state.wins.s2||'TBD'}</span></div></div>`;
+            if(state.wins.f1) br += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span class="winner-name">${state.wins.f1}</span></div>`;
+            document.getElementById('bracket-view').innerHTML = br + `</div>`;
         }
 
         function resetTournament() { if(confirm("⚠ RESET COMPLET ?")) { state = JSON.parse(JSON.stringify(initialState)); render(); } }
         function openTab(e, id) { document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active'); if(e) e.currentTarget.classList.add('active'); }
         function adminAccess() { if(prompt("Pass:") === MASTER_PWD) { openTab(null, 'admin'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); } }
-        window.onload = () => { fetchData(); setInterval(fetchData, 30000); };
+        window.onload = fetchData;
     </script>
 </body>
 </html>
