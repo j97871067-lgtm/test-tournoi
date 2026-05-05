@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TCG Tournament Hub</title>
+    <title>TCG Hub</title>
     <style>
         :root { 
-            --bg: #000000; /* Noir pur pour iPhone OLED */
+            --bg: #000000; 
             --txt: #ffffff; 
             --prim: #00ff88; 
             --sec: #1a1a1a; 
             --high: #ffd700; 
             --danger: #ff4444;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 15px; -webkit-font-smoothing: antialiased; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 15px; -webkit-font-smoothing: antialiased; }
         
-        /* Header & Titre */
-        .header-area { text-align: center; margin-bottom: 20px; }
-        h1 { color: var(--prim); margin: 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        #tourney-name-display { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
+        /* Bouton Admin Caché */
+        .admin-trigger { 
+            position: absolute; top: 15px; right: 15px; 
+            background: none; border: none; color: white; 
+            opacity: 0.2; font-size: 1.2rem; cursor: pointer; z-index: 1000;
+        }
+
+        /* Header */
+        .header-area { text-align: center; margin: 20px 0 30px 0; }
+        h1 { color: var(--prim); margin: 0; font-size: 2rem; text-transform: uppercase; font-weight: 900; }
 
         /* Navigation */
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; sticky; top: 10px; z-index: 100; }
-        .tab-btn { background: var(--sec); color: white; border: 1px solid #333; padding: 12px 5px; flex: 1; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 25px; }
+        .tab-btn { background: var(--sec); color: white; border: 1px solid #333; padding: 14px; flex: 1; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.2s; }
         .tab-btn.active { background: var(--prim); color: #000; border-color: var(--prim); }
 
         /* Contenu */
@@ -30,53 +36,48 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Tableaux */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--sec); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
-        th, td { padding: 14px 10px; border-bottom: 1px solid #333; text-align: center; }
+        /* Tableaux & UI */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--sec); border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
+        th, td { padding: 16px 10px; border-bottom: 1px solid #333; text-align: center; }
         th { background: rgba(255,255,255,0.05); color: var(--prim); font-size: 0.75rem; text-transform: uppercase; }
-        tr:last-child td { border-bottom: none; }
 
-        /* Top 8 / Bracket */
-        .bracket { display: flex; flex-direction: column; gap: 20px; padding: 10px 0; }
-        .bracket-round { display: flex; flex-direction: column; gap: 10px; }
-        .match { background: var(--sec); padding: 12px; border: 1px solid #333; border-radius: 10px; position: relative; }
+        /* Bracket Top 8 */
+        .bracket { display: flex; flex-direction: column; gap: 15px; }
+        .match { background: var(--sec); padding: 15px; border: 1px solid #333; border-radius: 12px; }
         .high-seed { color: var(--high); font-weight: bold; }
         
-        /* Vainqueur Final */
+        /* Winner Card */
         .final-winner-card { 
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            border: 2px solid var(--high);
-            padding: 30px 10px;
-            text-align: center;
-            border-radius: 20px;
-            margin-top: 20px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+            border: 2px solid var(--high); padding: 40px 10px; text-align: center; border-radius: 25px; margin-top: 30px;
         }
-        .winner-name { font-size: 2.2rem; font-weight: 900; color: var(--txt); display: block; margin-top: 10px; text-shadow: 0 0 15px rgba(255,215,0,0.4); }
-        .winner-trophy { font-size: 4.5rem; display: block; filter: drop-shadow(0 0 10px gold); }
+        .winner-name { font-size: 2.5rem; font-weight: 900; display: block; margin-top: 15px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+        .winner-trophy { font-size: 5rem; display: block; filter: drop-shadow(0 0 15px gold); }
 
-        /* Admin Forms */
-        .admin-card { background: var(--sec); border: 1px solid #444; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-        input, select, textarea { background: #111; color: white; border: 1px solid #444; padding: 12px; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 8px; font-size: 1rem; }
-        .btn-action { background: var(--prim); color: #000; border: none; padding: 15px; font-weight: bold; width: 100%; border-radius: 10px; cursor: pointer; font-size: 1rem; }
-        .btn-danger { background: var(--danger); color: white; margin-top: 10px; }
+        /* Admin UI */
+        .admin-card { background: var(--sec); border: 1px solid #444; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        input, select { background: #000; color: white; border: 1px solid #444; padding: 14px; width: 100%; box-sizing: border-box; margin-bottom: 12px; border-radius: 10px; font-size: 1rem; }
+        .btn-action { background: var(--prim); color: #000; border: none; padding: 18px; font-weight: bold; width: 100%; border-radius: 12px; cursor: pointer; font-size: 1rem; }
+        .btn-danger { background: var(--danger); color: white; margin-top: 15px; }
+        .share-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--prim); font-family: monospace; font-size: 0.8rem; word-break: break-all; color: var(--prim); margin-top: 10px; }
 
-        #sync-status { text-align: center; font-size: 0.7rem; margin-bottom: 10px; color: var(--prim); font-weight: bold; }
+        #sync-status { text-align: center; font-size: 0.7rem; margin-bottom: 10px; color: var(--prim); font-weight: 800; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
+    <button class="admin-trigger" onclick="adminAccess()">⚙️</button>
+
     <div class="header-area">
-        <h1 id="tourney-name-title">TOURNAMENT HUB</h1>
-        <div id="tourney-name-display">Chargement...</div>
+        <h1 id="main-title-display">TOURNAMENT HUB</h1>
     </div>
 
-    <div id="sync-status">Initialisation...</div>
+    <div id="sync-status">INITIALISATION...</div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab(event, 'pairings')">PAIRS</button>
         <button class="tab-btn" onclick="openTab(event, 'classement')">RANK</button>
         <button class="tab-btn" onclick="openTab(event, 'top8')">TOP 8</button>
-        <button class="tab-btn" onclick="adminAccess(event)">⚙️</button>
     </div>
 
     <div id="pairings" class="tab-content active">
@@ -94,14 +95,22 @@
 
     <div id="admin" class="tab-content">
         <div class="admin-card">
-            <h3>⚙️ Général</h3>
+            <h3>⚙️ Configuration du site</h3>
+            <label style="font-size: 0.8rem; opacity: 0.6;">Titre principal</label>
             <input type="text" id="admin-tourney-name" placeholder="Nom du Tournoi" oninput="state.name = this.value; render();">
+            
+            <label style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px; display: block;">Identifiants Cloud</label>
             <input type="text" id="api-bin-id" placeholder="Bin ID" oninput="saveApi()">
             <input type="password" id="api-key" placeholder="Master Key" oninput="saveApi()">
+            
+            <div id="share-area" style="display:none;">
+                <label style="font-size: 0.8rem; color: var(--prim);">Lien Joueurs (Auto-généré) :</label>
+                <div class="share-box" id="share-link"></div>
+            </div>
         </div>
 
         <div class="admin-card">
-            <h3>📥 Import</h3>
+            <h3>📥 Import fichiers</h3>
             <input type="file" id="file-selector">
             <select id="admin-round-choice">
                 <option value="1">Ronde 1</option><option value="2">Ronde 2</option><option value="3">Ronde 3</option>
@@ -111,21 +120,21 @@
         </div>
 
         <div class="admin-card">
-            <h3>🏆 Top 8 & Publication</h3>
-            <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"></div>
-            <div style="margin-top:10px;">
-                Vainqueurs T8: <select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select>
-                Vainqueurs T4: <select id="w-s1"></select><select id="w-s2"></select>
-                Champion: <select id="w-f1"></select>
+            <h3>🏆 Publication & Top 8</h3>
+            <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;"></div>
+            <div style="margin-top:15px; font-size: 0.9rem;">
+                T8 Winners: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select></div>
+                T4 Winners: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-s1"></select><select id="w-s2"></select></div>
+                🏆 Champion: <select id="w-f1" style="border: 1px solid var(--high);"></select>
             </div>
-            <button class="btn-action" style="background:#ff9500; margin-top:15px;" onclick="pushData()">🚀 PUBLIER SUR LE CLOUD</button>
-            <button class="btn-action btn-danger" onclick="resetTournament()">🧹 EFFACER TOUTES LES DONNÉES</button>
+            <button class="btn-action" style="background:#ff9500; margin-top:20px;" onclick="pushData()">🚀 PUBLIER LES RÉSULTATS</button>
+            <button class="btn-action btn-danger" onclick="resetTournament()">🧹 RESET TOURNAMENT</button>
         </div>
     </div>
 
     <script>
         const MASTER_PWD = "Vierge";
-        const initialState = { name: "Mon Tournoi", seeds: Array(8).fill(""), rounds: {}, ranks: "", wins: {}, currentRound: "1" };
+        const initialState = { name: "TOURNAMENT HUB", seeds: Array(8).fill(""), rounds: {}, ranks: "", wins: {}, currentRound: "1" };
         let state = JSON.parse(JSON.stringify(initialState));
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -139,6 +148,15 @@
             api.key = document.getElementById('api-key').value;
             localStorage.setItem('tcg_api_id', api.id);
             localStorage.setItem('tcg_api_key', api.key);
+            updateShareLink();
+        }
+
+        function updateShareLink() {
+            if(api.id && api.key) {
+                const base = window.location.href.split('?')[0];
+                document.getElementById('share-area').style.display = "block";
+                document.getElementById('share-link').innerText = `${base}?id=${api.id}&key=${api.key}`;
+            }
         }
 
         async function fetchData() {
@@ -147,7 +165,7 @@
                 const r = await fetch(`https://api.jsonbin.io/v3/b/${api.id}/latest?nocache=${Date.now()}`, {
                     headers: { 'X-Master-Key': api.key, 'X-Bin-Meta': 'false' }
                 });
-                if(r.ok) { state = await r.json(); render(); document.getElementById('sync-status').innerText = "✅ SYNCHRONISÉ"; }
+                if(r.ok) { state = await r.json(); render(); document.getElementById('sync-status').innerText = "• LIVE SYNC ACTIVE •"; }
             } catch(e) {}
         }
 
@@ -160,8 +178,8 @@
                     method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': api.key },
                     body: JSON.stringify(state)
                 });
-                alert("Publié avec succès !"); fetchData();
-            } catch(e) { alert("Erreur d'envoi"); }
+                alert("Données Cloud mises à jour !"); fetchData();
+            } catch(e) { alert("Erreur de connexion"); }
         }
 
         function handleImport() {
@@ -182,24 +200,23 @@
         }
 
         function parsePairings(rows) {
-            let matches = [];
-            rows.forEach((row) => {
+            let m = [];
+            rows.forEach(row => {
                 const c = row.querySelectorAll("td");
                 if (c.length >= 4) {
-                    const tableNum = parseInt(c[0].innerText.trim());
+                    const t = parseInt(c[0].innerText.trim());
                     const p1 = c[1].innerText.split('(')[0].trim();
                     const p2 = c[3].innerText.split('(')[0].trim();
-                    if(p1) matches.push({ table: tableNum, p1: p1, p2: p2 || "(BYE)" });
+                    if(p1) m.push({ t, p1, p2: p2 || "(BYE)" });
                 }
             });
-            // TRI PAR TABLE (Croissant)
-            matches.sort((a, b) => a.table - b.table);
-            return matches.map(m => `${m.table},${m.p1} vs ${m.p2},`).join('\n');
+            m.sort((a,b) => a.t - b.t);
+            return m.map(x => `${x.t},${x.p1} vs ${x.p2},`).join('\n');
         }
 
         function parseStandings(rows) {
             let csv = "";
-            rows.forEach((row) => {
+            rows.forEach(row => {
                 const c = row.querySelectorAll("td");
                 if (c.length >= 7) csv += `${c[0].innerText.trim()},${c[1].innerText.trim()},${c[5].innerText.trim()},${c[6].innerText.trim()}\n`;
             });
@@ -207,10 +224,11 @@
         }
 
         function render() {
-            document.getElementById('tourney-name-display').innerText = state.name || "Tournoi";
+            document.getElementById('main-title-display').innerText = state.name || "TOURNOI";
             document.getElementById('admin-tourney-name').value = state.name || "";
             document.getElementById('api-bin-id').value = api.id;
             document.getElementById('api-key').value = api.key;
+            updateShareLink();
 
             const rds = Object.keys(state.rounds).sort((a,b)=>a-b);
             document.getElementById('user-round-select').innerHTML = rds.map(r => `<option value="${r}" ${r==state.currentRound?'selected':''}>Ronde ${r}</option>`).join('');
@@ -238,49 +256,47 @@
 
             const isHigh = (p, pair) => (p && p === pair[0]) ? 'class="high-seed"' : '';
             
-            let bracketHTML = `
-                <div class="bracket">
-                    <div class="bracket-round"><h4>TOP 8</h4>
-                        <div class="match"><span class="high-seed">#1 ${s[0]||'?'}</span> vs #8 ${s[7]||'?'}</div>
-                        <div class="match"><span class="high-seed">#2 ${s[1]||'?'}</span> vs #7 ${s[6]||'?'}</div>
-                        <div class="match"><span class="high-seed">#3 ${s[2]||'?'}</span> vs #6 ${s[5]||'?'}</div>
-                        <div class="match"><span class="high-seed">#4 ${s[3]||'?'}</span> vs #5 ${s[4]||'?'}</div>
-                    </div>
-                    <div class="bracket-round"><h4>TOP 4</h4>
-                        <div class="match"><span ${isHigh(state.wins.q1,[state.wins.q1,state.wins.q4])}>${state.wins.q1||'TBD'}</span> vs <span>${state.wins.q4||'TBD'}</span></div>
-                        <div class="match"><span ${isHigh(state.wins.q2,[state.wins.q2,state.wins.q3])}>${state.wins.q2||'TBD'}</span> vs <span>${state.wins.q3||'TBD'}</span></div>
-                    </div>
-                    <div class="bracket-round"><h4>FINALE</h4>
-                        <div class="match"><span ${isHigh(state.wins.s1,[state.wins.s1,state.wins.s2])}>${state.wins.s1||'TBD'}</span> vs <span>${state.wins.s2||'TBD'}</span></div>
-                    </div>
-            `;
+            let bracketHTML = `<div class="bracket">
+                <div class="bracket-round"><h4>QUARTS DE FINALE</h4>
+                    <div class="match"><span class="high-seed">#1 ${s[0]||'?'}</span> vs #8 ${s[7]||'?'}</div>
+                    <div class="match"><span class="high-seed">#2 ${s[1]||'?'}</span> vs #7 ${s[6]||'?'}</div>
+                    <div class="match"><span class="high-seed">#3 ${s[2]||'?'}</span> vs #6 ${s[5]||'?'}</div>
+                    <div class="match"><span class="high-seed">#4 ${s[3]||'?'}</span> vs #5 ${s[4]||'?'}</div>
+                </div>
+                <div class="bracket-round"><h4>DEMI-FINALES</h4>
+                    <div class="match"><span ${isHigh(state.wins.q1,[state.wins.q1,state.wins.q4])}>${state.wins.q1||'TBD'}</span> vs <span>${state.wins.q4||'TBD'}</span></div>
+                    <div class="match"><span ${isHigh(state.wins.q2,[state.wins.q2,state.wins.q3])}>${state.wins.q2||'TBD'}</span> vs <span>${state.wins.q3||'TBD'}</span></div>
+                </div>
+                <div class="bracket-round"><h4>GRANDE FINALE</h4>
+                    <div class="match"><span ${isHigh(state.wins.s1,[state.wins.s1,state.wins.s2])}>${state.wins.s1||'TBD'}</span> vs <span>${state.wins.s2||'TBD'}</span></div>
+                </div>`;
 
             if(state.wins.f1) {
-                bracketHTML += `
-                    <div class="final-winner-card">
-                        <span class="winner-trophy">🏆</span>
-                        <span style="color:var(--prim); font-weight:bold; text-transform:uppercase;">Champion</span>
-                        <span class="winner-name">${state.wins.f1}</span>
-                    </div>
-                `;
+                bracketHTML += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span style="color:var(--prim); font-weight:800; letter-spacing:2px;">CHAMPION</span><span class="winner-name">${state.wins.f1}</span></div>`;
             }
-            bracketHTML += `</div>`;
-            document.getElementById('bracket-view').innerHTML = bracketHTML;
+            document.getElementById('bracket-view').innerHTML = bracketHTML + `</div>`;
         }
 
         function resetTournament() {
-            if(confirm("Êtes-vous sûr de vouloir EFFACER TOUTES LES DONNÉES ? Cette action est irréversible.")) {
+            if(confirm("⚠ ACTION IRRÉVERSIBLE ⚠\n\nEffacer tous les appariements, classements et Top 8 ?")) {
                 state = JSON.parse(JSON.stringify(initialState));
                 render();
-                alert("Données réinitialisées. N'oubliez pas de 'Publier sur le Cloud' pour vider le smartphone des joueurs.");
             }
         }
 
         function openTab(e, id) {
             document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
+            document.getElementById(id).classList.add('active'); 
+            if(e) e.currentTarget.classList.add('active');
         }
-        function adminAccess(e) { if(prompt("Pass:") === MASTER_PWD) openTab(e, 'admin'); }
+
+        function adminAccess() { 
+            if(prompt("Code d'accès Admin :") === MASTER_PWD) {
+                openTab(null, 'admin');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            } 
+        }
+
         window.onload = () => { fetchData(); setInterval(fetchData, 30000); };
     </script>
 </body>
