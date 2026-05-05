@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TCG Hub</title>
+    <title>TCG Hub Pro</title>
     <style>
         :root { 
             --bg: #000000; 
@@ -15,53 +15,44 @@
         }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 15px; -webkit-font-smoothing: antialiased; }
         
-        /* Bouton Admin Caché */
-        .admin-trigger { 
-            position: absolute; top: 15px; right: 15px; 
-            background: none; border: none; color: white; 
-            opacity: 0.2; font-size: 1.2rem; cursor: pointer; z-index: 1000;
-        }
+        .admin-trigger { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; opacity: 0.2; font-size: 1.2rem; cursor: pointer; z-index: 1000; }
 
-        /* Header */
         .header-area { text-align: center; margin: 20px 0 30px 0; }
-        h1 { color: var(--prim); margin: 0; font-size: 2rem; text-transform: uppercase; font-weight: 900; }
+        h1 { color: var(--prim); margin: 0; font-size: 1.8rem; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
 
-        /* Navigation */
         .tabs { display: flex; gap: 8px; margin-bottom: 25px; }
-        .tab-btn { background: var(--sec); color: white; border: 1px solid #333; padding: 14px; flex: 1; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.2s; }
+        .tab-btn { background: var(--sec); color: white; border: 1px solid #333; padding: 14px; flex: 1; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: 0.2s; text-transform: uppercase; }
         .tab-btn.active { background: var(--prim); color: #000; border-color: var(--prim); }
 
-        /* Contenu */
         .tab-content { display: none; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Tableaux & UI */
         table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--sec); border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
-        th, td { padding: 16px 10px; border-bottom: 1px solid #333; text-align: center; }
-        th { background: rgba(255,255,255,0.05); color: var(--prim); font-size: 0.75rem; text-transform: uppercase; }
+        th, td { padding: 14px 8px; border-bottom: 1px solid #333; text-align: center; font-size: 0.9rem; }
+        th { background: rgba(255,255,255,0.05); color: var(--prim); font-size: 0.7rem; text-transform: uppercase; }
 
-        /* Bracket Top 8 */
-        .bracket { display: flex; flex-direction: column; gap: 15px; }
-        .match { background: var(--sec); padding: 15px; border: 1px solid #333; border-radius: 12px; }
-        .high-seed { color: var(--high); font-weight: bold; }
+        /* Style High Seed */
+        .high-seed { color: var(--high) !important; font-weight: 900 !important; border-left: 3px solid var(--high); padding-left: 5px; }
         
-        /* Winner Card */
+        .bracket { display: flex; flex-direction: column; gap: 15px; }
+        .match { background: var(--sec); padding: 15px; border: 1px solid #333; border-radius: 12px; line-height: 1.6; }
+        .match span { display: block; color: #ccc; }
+
         .final-winner-card { 
             background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
             border: 2px solid var(--high); padding: 40px 10px; text-align: center; border-radius: 25px; margin-top: 30px;
         }
-        .winner-name { font-size: 2.5rem; font-weight: 900; display: block; margin-top: 15px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
-        .winner-trophy { font-size: 5rem; display: block; filter: drop-shadow(0 0 15px gold); }
+        .winner-name { font-size: 2.2rem; font-weight: 900; display: block; margin-top: 15px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+        .winner-trophy { font-size: 4rem; display: block; filter: drop-shadow(0 0 15px gold); }
 
-        /* Admin UI */
         .admin-card { background: var(--sec); border: 1px solid #444; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
         input, select { background: #000; color: white; border: 1px solid #444; padding: 14px; width: 100%; box-sizing: border-box; margin-bottom: 12px; border-radius: 10px; font-size: 1rem; }
         .btn-action { background: var(--prim); color: #000; border: none; padding: 18px; font-weight: bold; width: 100%; border-radius: 12px; cursor: pointer; font-size: 1rem; }
         .btn-danger { background: var(--danger); color: white; margin-top: 15px; }
-        .share-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--prim); font-family: monospace; font-size: 0.8rem; word-break: break-all; color: var(--prim); margin-top: 10px; }
+        .share-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--prim); font-family: monospace; font-size: 0.75rem; word-break: break-all; color: var(--prim); margin-top: 10px; }
 
-        #sync-status { text-align: center; font-size: 0.7rem; margin-bottom: 10px; color: var(--prim); font-weight: 800; letter-spacing: 1px; }
+        #sync-status { text-align: center; font-size: 0.7rem; margin-bottom: 10px; color: var(--prim); font-weight: 800; }
     </style>
 </head>
 <body>
@@ -75,8 +66,8 @@
     <div id="sync-status">INITIALISATION...</div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'pairings')">PAIRS</button>
-        <button class="tab-btn" onclick="openTab(event, 'classement')">RANK</button>
+        <button class="tab-btn active" onclick="openTab(event, 'pairings')">Pairings</button>
+        <button class="tab-btn" onclick="openTab(event, 'classement')">Classement</button>
         <button class="tab-btn" onclick="openTab(event, 'top8')">TOP 8</button>
     </div>
 
@@ -95,22 +86,17 @@
 
     <div id="admin" class="tab-content">
         <div class="admin-card">
-            <h3>⚙️ Configuration du site</h3>
-            <label style="font-size: 0.8rem; opacity: 0.6;">Titre principal</label>
+            <h3>⚙️ Configuration</h3>
             <input type="text" id="admin-tourney-name" placeholder="Nom du Tournoi" oninput="state.name = this.value; render();">
-            
-            <label style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px; display: block;">Identifiants Cloud</label>
             <input type="text" id="api-bin-id" placeholder="Bin ID" oninput="saveApi()">
             <input type="password" id="api-key" placeholder="Master Key" oninput="saveApi()">
-            
             <div id="share-area" style="display:none;">
-                <label style="font-size: 0.8rem; color: var(--prim);">Lien Joueurs (Auto-généré) :</label>
                 <div class="share-box" id="share-link"></div>
             </div>
         </div>
 
         <div class="admin-card">
-            <h3>📥 Import fichiers</h3>
+            <h3>📥 Import Fichiers</h3>
             <input type="file" id="file-selector">
             <select id="admin-round-choice">
                 <option value="1">Ronde 1</option><option value="2">Ronde 2</option><option value="3">Ronde 3</option>
@@ -120,14 +106,14 @@
         </div>
 
         <div class="admin-card">
-            <h3>🏆 Publication & Top 8</h3>
+            <h3>🏆 Top 8 & Publication</h3>
             <div id="seeds-inputs" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;"></div>
             <div style="margin-top:15px; font-size: 0.9rem;">
-                T8 Winners: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select></div>
-                T4 Winners: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-s1"></select><select id="w-s2"></select></div>
+                Gagnants T8: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-q1"></select><select id="w-q2"></select><select id="w-q3"></select><select id="w-q4"></select></div>
+                Gagnants T4: <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;"><select id="w-s1"></select><select id="w-s2"></select></div>
                 🏆 Champion: <select id="w-f1" style="border: 1px solid var(--high);"></select>
             </div>
-            <button class="btn-action" style="background:#ff9500; margin-top:20px;" onclick="pushData()">🚀 PUBLIER LES RÉSULTATS</button>
+            <button class="btn-action" style="background:#ff9500; margin-top:20px;" onclick="pushData()">🚀 PUBLIER SUR LE CLOUD</button>
             <button class="btn-action btn-danger" onclick="resetTournament()">🧹 RESET TOURNAMENT</button>
         </div>
     </div>
@@ -178,8 +164,8 @@
                     method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': api.key },
                     body: JSON.stringify(state)
                 });
-                alert("Données Cloud mises à jour !"); fetchData();
-            } catch(e) { alert("Erreur de connexion"); }
+                alert("Cloud mis à jour !"); fetchData();
+            } catch(e) { alert("Erreur cloud"); }
         }
 
         function handleImport() {
@@ -189,29 +175,50 @@
             reader.onload = (e) => {
                 const doc = new DOMParser().parseFromString(e.target.result, "text/html");
                 const rows = doc.querySelectorAll("table.report tr");
+                let type = "";
                 if (doc.title.toLowerCase().includes("appariements")) {
                     const r = document.getElementById('admin-round-choice').value;
                     state.rounds[r] = parsePairings(rows);
                     state.currentRound = r;
-                } else { state.ranks = parseStandings(rows); }
+                    type = "Appariements";
+                } else { 
+                    state.ranks = parseStandings(rows);
+                    type = "Classement";
+                }
                 render();
+                alert(`✅ Fichier ${type} correctement envoyé et analysé.`);
             };
             reader.readAsText(file);
         }
 
         function parsePairings(rows) {
-            let m = [];
+            let matches = [];
+            let seenTables = new Set();
+            const scoreRegex = /\(\d+\/\d+\/\d+\s*\(\d+\)\)/;
+
             rows.forEach(row => {
                 const c = row.querySelectorAll("td");
                 if (c.length >= 4) {
-                    const t = parseInt(c[0].innerText.trim());
-                    const p1 = c[1].innerText.split('(')[0].trim();
-                    const p2 = c[3].innerText.split('(')[0].trim();
-                    if(p1) m.push({ t, p1, p2: p2 || "(BYE)" });
+                    const tableNum = c[0].innerText.trim();
+                    if(seenTables.has(tableNum)) return; // Empêche les doublons
+
+                    const p1Raw = c[1].innerText.trim();
+                    const p2Raw = c[3].innerText.trim();
+
+                    const p1Name = p1Raw.split('(')[0].trim();
+                    const p2Name = p2Raw.split('(')[0].trim();
+                    
+                    const scoreMatch = p1Raw.match(scoreRegex) || p2Raw.match(scoreRegex);
+                    const scoreStr = scoreMatch ? scoreMatch[0] : "";
+
+                    if(p1Name) {
+                        matches.push({ t: parseInt(tableNum), p1: p1Name, p2: p2Name || "(BYE)", s: scoreStr });
+                        seenTables.add(tableNum);
+                    }
                 }
             });
-            m.sort((a,b) => a.t - b.t);
-            return m.map(x => `${x.t},${x.p1} vs ${x.p2},`).join('\n');
+            matches.sort((a,b) => a.t - b.t);
+            return matches.map(m => `${m.t},${m.p1} vs ${m.p2},${m.s}`).join('\n');
         }
 
         function parseStandings(rows) {
@@ -223,9 +230,21 @@
             return csv.trim();
         }
 
+        // --- LOGIQUE SEEDING ---
+        function getSeedRank(playerName) {
+            if (!playerName || playerName === "TBD") return 99;
+            const idx = state.seeds.indexOf(playerName);
+            return idx === -1 ? 99 : idx + 1; // Rang 1 à 8
+        }
+
+        const isHigh = (p, other) => {
+            if (!p || !other || p === 'TBD' || other === 'TBD') return '';
+            return getSeedRank(p) < getSeedRank(other) ? 'class="high-seed"' : '';
+        };
+
         function render() {
-            document.getElementById('main-title-display').innerText = state.name || "TOURNOI";
-            document.getElementById('admin-tourney-name').value = state.name || "";
+            document.getElementById('main-title-display').innerText = state.name;
+            document.getElementById('admin-tourney-name').value = state.name;
             document.getElementById('api-bin-id').value = api.id;
             document.getElementById('api-key').value = api.key;
             updateShareLink();
@@ -237,13 +256,13 @@
                 const c = l.split(','); return c.length > 1 ? `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]||''}</td></tr>` : '';
             }).join('');
 
-            const players = [];
+            const playersList = [];
             document.getElementById('r-body').innerHTML = state.ranks.split('\n').map(l => {
-                const c = l.split(','); if(c.length > 1) { players.push(c[1].trim()); return `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`; } return '';
+                const c = l.split(','); if(c.length > 1) { playersList.push(c[1].trim()); return `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`; } return '';
             }).join('');
 
             document.getElementById('seeds-inputs').innerHTML = state.seeds.map((s, i) => {
-                let opts = players.map(p => `<option value="${p}" ${p===s?'selected':''}>${p}</option>`).join('');
+                let opts = playersList.map(p => `<option value="${p}" ${p===s?'selected':''}>${p}</option>`).join('');
                 return `<div>#${i+1}<select id="seed-${i}" onchange="state.seeds[${i}]=this.value"><option value="">-</option>${opts}</select></div>`;
             }).join('');
 
@@ -254,31 +273,29 @@
             up('w-s1',[state.wins.q1,state.wins.q4],state.wins.s1); up('w-s2',[state.wins.q2,state.wins.q3],state.wins.s2);
             up('w-f1',[state.wins.s1,state.wins.s2],state.wins.f1);
 
-            const isHigh = (p, pair) => (p && p === pair[0]) ? 'class="high-seed"' : '';
-            
-            let bracketHTML = `<div class="bracket">
+            let brHTML = `<div class="bracket">
                 <div class="bracket-round"><h4>QUARTS DE FINALE</h4>
-                    <div class="match"><span class="high-seed">#1 ${s[0]||'?'}</span> vs #8 ${s[7]||'?'}</div>
-                    <div class="match"><span class="high-seed">#2 ${s[1]||'?'}</span> vs #7 ${s[6]||'?'}</div>
-                    <div class="match"><span class="high-seed">#3 ${s[2]||'?'}</span> vs #6 ${s[5]||'?'}</div>
-                    <div class="match"><span class="high-seed">#4 ${s[3]||'?'}</span> vs #5 ${s[4]||'?'}</div>
+                    <div class="match"><span ${isHigh(s[0],s[7])}>#1 ${s[0]||'?'}</span><span ${isHigh(s[7],s[0])}>#8 ${s[7]||'?'}</span></div>
+                    <div class="match"><span ${isHigh(s[1],s[6])}>#2 ${s[1]||'?'}</span><span ${isHigh(s[6],s[1])}>#7 ${s[6]||'?'}</span></div>
+                    <div class="match"><span ${isHigh(s[2],s[5])}>#3 ${s[2]||'?'}</span><span ${isHigh(s[5],s[2])}>#6 ${s[5]||'?'}</span></div>
+                    <div class="match"><span ${isHigh(s[3],s[4])}>#4 ${s[3]||'?'}</span><span ${isHigh(s[4],s[3])}>#5 ${s[4]||'?'}</span></div>
                 </div>
                 <div class="bracket-round"><h4>DEMI-FINALES</h4>
-                    <div class="match"><span ${isHigh(state.wins.q1,[state.wins.q1,state.wins.q4])}>${state.wins.q1||'TBD'}</span> vs <span>${state.wins.q4||'TBD'}</span></div>
-                    <div class="match"><span ${isHigh(state.wins.q2,[state.wins.q2,state.wins.q3])}>${state.wins.q2||'TBD'}</span> vs <span>${state.wins.q3||'TBD'}</span></div>
+                    <div class="match"><span ${isHigh(state.wins.q1,state.wins.q4)}>${state.wins.q1||'TBD'}</span><span ${isHigh(state.wins.q4,state.wins.q1)}>${state.wins.q4||'TBD'}</span></div>
+                    <div class="match"><span ${isHigh(state.wins.q2,state.wins.q3)}>${state.wins.q2||'TBD'}</span><span ${isHigh(state.wins.q3,state.wins.q2)}>${state.wins.q3||'TBD'}</span></div>
                 </div>
                 <div class="bracket-round"><h4>GRANDE FINALE</h4>
-                    <div class="match"><span ${isHigh(state.wins.s1,[state.wins.s1,state.wins.s2])}>${state.wins.s1||'TBD'}</span> vs <span>${state.wins.s2||'TBD'}</span></div>
+                    <div class="match"><span ${isHigh(state.wins.s1,state.wins.s2)}>${state.wins.s1||'TBD'}</span><span ${isHigh(state.wins.s2,state.wins.s1)}>${state.wins.s2||'TBD'}</span></div>
                 </div>`;
 
             if(state.wins.f1) {
-                bracketHTML += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span style="color:var(--prim); font-weight:800; letter-spacing:2px;">CHAMPION</span><span class="winner-name">${state.wins.f1}</span></div>`;
+                brHTML += `<div class="final-winner-card"><span class="winner-trophy">🏆</span><span style="color:var(--prim); font-weight:800; letter-spacing:2px;">CHAMPION</span><span class="winner-name">${state.wins.f1}</span></div>`;
             }
-            document.getElementById('bracket-view').innerHTML = bracketHTML + `</div>`;
+            document.getElementById('bracket-view').innerHTML = brHTML + `</div>`;
         }
 
         function resetTournament() {
-            if(confirm("⚠ ACTION IRRÉVERSIBLE ⚠\n\nEffacer tous les appariements, classements et Top 8 ?")) {
+            if(confirm("⚠ ACTION IRRÉVERSIBLE ⚠\n\nEffacer tout le tournoi ?")) {
                 state = JSON.parse(JSON.stringify(initialState));
                 render();
             }
